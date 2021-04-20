@@ -8,7 +8,8 @@
         /* Name: Eleni Partakki
          * Comments: I actually enjoyed this homework. Lab 8 and 9 had been very helpful in understanding the concepts, 
          * and I found the instructions on the website very clear and approachable. I decided to add fun colors to mine
-         * but tried to keep the idea between the sun, earth and moon.
+         * but tried to keep the idea between the sun, earth and moon. I used a lot of ideas from the labs mentioned
+         * previously, and I am content with my result.
         */
 
         var scene, camera, renderer;  // Three.js rendering basics.
@@ -34,13 +35,12 @@
 
         //ambient light
         ambientLight = new THREE.AmbientLight("pink");
-        //scene.add(ambientLight);
 
         // point light
-        pointLight = new THREE.PointLight("purple", .8, 300); // color, intensity, and distance
+        pointLight = new THREE.PointLight("purple", .8, 300);
         pointLight.position.set(0,0,0);
         scene.add(pointLight);
-        scene.add(new THREE.PointLightHelper(pointLight, 3)); // see where the light is
+        scene.add(new THREE.PointLightHelper(pointLight, 3)); 
 
         // directional light
         dirLight = new THREE.DirectionalLight("pink", .4);
@@ -48,40 +48,40 @@
         dirLight.position.set(100,0,100);
         scene.add(dirLight);
 
-        // set up the sun vars
+        // sun
         var sunRadius = 40,
             sunSegments = 20,
             sunRings = 20;
 
-        // set up the earth vars
+        // earth
         var earthRadius = 16,
             earthSegments = 20,
             earthRings = 20;
 
-        // set up the moon vars
+        // moon 
         var moonRadius = 8,
             moonSegments = 20,
             moonRings = 20;
 
-        // create the sun's material
+        // create sun's material
         var sphereGeometry = new THREE.SphereGeometry(sunRadius, sunSegments, sunRings);
         var sphereMaterial = new THREE.MeshLambertMaterial({ color: "salmon", emissive: "wheat", emissiveIntensity: .4 });
         sun = new THREE.Mesh(sphereGeometry, sphereMaterial);
 
-        // create the earth's material
+        // create earth's material
         var sphereGeometry = new THREE.SphereGeometry(earthRadius, earthSegments, earthRings);
         var sphereMaterial = new THREE.MeshLambertMaterial({ color: "skyblue" });
         earth = new THREE.Mesh(sphereGeometry, sphereMaterial);
 
-        // create the moon's material
+        // create moon's material
         var sphereGeometry = new THREE.SphereGeometry(moonRadius, moonSegments, moonRings);
         var sphereMaterial = new THREE.MeshLambertMaterial({ color: "rosybrown" });
         moon = new THREE.Mesh(sphereGeometry, sphereMaterial);
 
-        // add the sun to the scene
+        // add sun to scene
         scene.add(sun); 
 
-        //add the earth to the sun
+        //add earth to sun
         earth.position.x += 80;
         sun.add(earth);
 
