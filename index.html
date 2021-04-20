@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<head>
+<title>Homework 7</title>
+<script src="three.min.js"></script>
+
+<script>
+    /* Name: Eleni Partakki
+     * Comments: 
+    */
+
+    var scene, camera, renderer;  // Three.js rendering basics.
+    var canvas;  // The canvas on which the image is rendered.
+    // var ambientLight, dirLight; // Our directional light is global so we can change its position.
+
+    // Create the scene. This function is called once, as soon as the page loads.
+    // The renderer has already been created before this function is called.
+    function createWorld() {
+        
+        renderer.setClearColor(0); // Set background color (0, or 0x000000, is black).
+        scene = new THREE.Scene(); // Create a new scene which we can add objects to.
+    
+        // create a camera, sitting on the positive z-axis.  The camera is not part of the scene.
+        camera = new THREE.PerspectiveCamera(45, canvas.width/canvas.height, 0.1, 1000);
+        camera.position.z = 500; // pull back the camera
+        camera.position.y = 200;
+        camera.rotation.x = -.38;
+
+        addLighting();
+
+        // create and add sun/planets
+        createSun();
+        createMercurySystem();
+        createVenusSystem();
+        createEarthSystem();
+        createMarsSystem();
+    }
+
+    function addLighting(){
+        // ambient light
+        var ambientLight = new THREE.AmbientLight("white", .1); // color, intensity
+        scene.add(ambientLight);
+
+        // Light from the sun
+        sunPointLight = new THREE.PointLight("white", .8, 300, .1); // color, intensity, max distance, diffusion rate
+        sunPointLight.position.set(0, 0, 0);
+        scene.add(sunPointLight);
+    }
+
+    // FUNCS FOR EACH SUN/PLANET
+    var sunSphere, mercurySphere, venusSphere, earthSphere, moonSphere, marsSphere; // shapes
+    var mercuryObject, venusObject, earthObject, marsObject; // 3D objects that have children etc
+    // var sunObject = new THREE.Object3D(); // a 3D object that will aid in light from the sun;
+    var mercuryDistance, venusDistance, earthDistance, moonDistance, marsDistance; // distance from origin
+
+    function createSun(){
+        // create sphere
+        var sunGeometry = new THREE.SphereGeometry(20, 30, 30); // radius, segments, rings
+        var sunMaterial = new THREE.MeshLambertMaterial({ color: "orange", emissive: "gold", emissiveIntensity: .5});
+        // var sunMaterial = new THREE.MeshLambertMaterial({ color: "orange"});
+        sunSphere = new THREE.Mesh(sunGeometry, sunMaterial);
+
+        // add sun to the scene
+        scene.add(sunSphere);
+    }
+
+    function createMercurySystem(){
+        // calculate distance from the sun and tilt
+        mercuryObject = new THREE.Object3D();
+        // mercuryObject.rotation.z = 15;
+        mercuryDistance = 50;
+        // mercuryObject.position.x = mercuryDistance;
+        
+        // create mercury shape
+        var mercuryGeometry = new THREE.SphereGeometry(7.5, 30, 30);
+        var mercuryMaterial = new THREE.MeshLambertMaterial({ color: "pink"});
+        mercurySphere = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
+        mercuryObject.add(mercurySphere);
+
+        // add to scene
+        scene.add(mercuryObject);
+    }
+
+    function createVenusSystem(){
+        // calculate distance from the sun and tilt
+        venusObject = new THREE.Object3D();
+        // venusObject.rotation.z = -15;
+        venusDistance = 100;
+        // venusObject.position.x = 100;
+        
+
+        // create mercury shape
+        var venusGeometry = new THREE.SphereGeometry(10, 30, 30);
+        var venusMaterial = new THREE.MeshLambertMaterial({ color: "orange"});
+        venusSphere = new THREE.Mesh(venusGeometry, venusMaterial);
+        venusObject.add(venusSphere);
+
+        // add to scene
+        scene.add(venusObject);
+    }
+
+    function createEarthSystem(){
+        // Earth
+        // create Earth object then translate so it is a distance from the sun
+        earthObject = new THREE.Object3D();
+        earthDistance = 150;
+        // earthObject.position.x = 150;
+
+        // create a sphere, add as a child of the Earth object
+        var earthGeometry = new THREE.SphereGeometry(15, 30, 30);
+        var earthMaterial = new THREE.MeshLambertMaterial({ color: "green" });
+        earthSphere = new THREE.Mesh(earthGeometry, earthMaterial);
+        earthObject.add(earthSphere);
+
+        // add Earth object to scene
+        // to rotate around the sun: rotate object, to rotate on axis: rotate sphere
+        scene.add(earthObject);
+
+        // Moon
+        // create moon as a child of the earth object
+        var moonGeometry = new THREE.SphereGeometry(5, 30, 30);
+        var moonMaterial = new THREE.MeshLambertMaterial({ color: "white" });
+        moonSphere = new THREE.Mesh(moonGeometry, moonMaterial);
+        earthObject.add(moonSphere);
+        moonDistance = 25; // distance from the earth + earth radius
+    }
+
+    function createMarsSystem(){
+        // calculate distance from the sun and tilt
+        marsObject = new THREE.Object3D();
+        marsDistance = 200;
+        // marsObject.position.x = 200;
+
+        // create mercury shape
+        var marsGeometry = new THREE.SphereGeometry(12, 30, 30);
+        var marsMaterial = new THREE.MeshLambertMaterial({ color: "red"});
+        marsSphere = new THREE.Mesh(marsGeometry, marsMaterial);
+        marsObject.add(marsSphere);
+
+        // add to scene
+        scene.add(marsObject);
+    }
+
+    // X, Y, Z positions
+    var mercurySphereX, mercurySphereZ;
+    var venusSphereX, venusSphereZ;
+    var earthObjectX, earthObjectZ, moonX, moonY, moonZ;
+    var venusObjectX, venusObjectZ;
+
+    // Orbit angles
+    var mercuryAngle = 0;
+    var venusAngle = 0;
+    var earthAngle = 0; // The angle the earth is rotating
+    var moonAngle = 0; // angle
+    var marsAngle = 0;
+
+    
+    // Render the scene. This is called for each frame of the animation.
+    function render() {
+        // Calculate angles/orbit rate
+        mercuryAngle += Math.PI/300;
+        venusAngle += Math.PI/300;
+        earthAngle += Math.PI/300; // rate earth orbits sun
+        moonAngle += Math.PI/200; // rate moon orbits earth
+        marsAngle += Math.PI/300;
+
+        // Calculate positions:
+        // Mercury
+        mercurySphereX = Math.cos(mercuryAngle) * mercuryDistance;
+        mercurySphereZ = Math.sin(mercuryAngle) * mercuryDistance;
+
+        // Venus
+        venusSphereX = - Math.cos(venusAngle) * venusDistance;
+        venusSphereZ = Math.sin(venusAngle) * venusDistance;
+
+        // Earth
+        earthObjectX = Math.cos(earthAngle) * earthDistance; // Math.cos returns a num b/t 1 and 0
+        earthObjectZ = Math.sin(earthAngle) * earthDistance;
+
+        // Moon
+        moonX = Math.cos(moonAngle) * moonDistance;
+        moonY = Math.sin(moonAngle) * moonDistance;
+
+        // Mars
+        marsX = Math.cos(marsAngle) * marsDistance;
+        marsY = Math.sin(marsAngle) * marsDistance;
+
+        //SET POSITIONS
+        // Mercury
+        mercurySphere.position.x = mercurySphereX;
+        mercurySphere.position.z = mercurySphereZ;
+
+        // Venus
+        venusSphere.position.x = venusSphereX;
+        venusSphere.position.z = venusSphereZ;
+
+        // Earth
+        earthObject.position.x = earthObjectX;
+        earthObject.position.z = earthObjectZ;
+
+        // Moon
+        moonSphere.position.x = moonX;
+        moonSphere.position.y = moonY;
+
+        // Mars
+        marsSphere.position.x = marsX;
+        marsSphere.position.y = marsY;
+
+        // animate + render
+        requestAnimationFrame( render );
+        renderer.render(scene, camera);
+    }
+
+    //----------------------------------------------------------------------------------
+
+    // The init() function is called by the onload event when the document has loaded.
+    function init() {
+        try {
+            canvas = document.getElementById("glcanvas");
+            renderer = new THREE.WebGLRenderer( { canvas: canvas, antialias: true} );
+        }
+        catch (e) {
+            document.getElementById("canvas-holder").innerHTML = "<h3><b>WebGL is not available.</b><h3>";
+            return;
+        }
+    
+        // create world and render scene
+        createWorld();
+        render();
+    }
+
+</script>
+
+</head>
+<body onload="init()">
+<div id="canvas-holder">
+    <canvas id="glcanvas" width="600" height="400"></canvas>
+</div>
+</body>
+</html>
