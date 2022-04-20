@@ -28,16 +28,16 @@
         camera.position.z = 300; // pull back the camera
 
         //ambient light
-        ambientLight = new THREE.AmbientLight("pink");
+        ambientLight = new THREE.AmbientLight("gold");
 
         // point light
-        pointLight = new THREE.PointLight("purple", .8, 300);
+        pointLight = new THREE.PointLight("gold", .8, 300);
         pointLight.position.set(0,0,0);
         scene.add(pointLight);
         scene.add(new THREE.PointLightHelper(pointLight, 3)); 
 
         // directional light
-        dirLight = new THREE.DirectionalLight("pink", .4);
+        dirLight = new THREE.DirectionalLight("gold", .4);
         angle = Math.PI/3;
         dirLight.position.set(100,0,100);
         scene.add(dirLight);
@@ -59,7 +59,7 @@
 
         // create sun's material
         var sphereGeometry = new THREE.SphereGeometry(sunRadius, sunSegments, sunRings);
-        var sphereMaterial = new THREE.MeshLambertMaterial({ color: "salmon", emissive: "wheat", emissiveIntensity: .4 });
+        var sphereMaterial = new THREE.MeshLambertMaterial({ color: "yellow", emissive: "wheat", emissiveIntensity: .4 });
         sun = new THREE.Mesh(sphereGeometry, sphereMaterial);
 
         // create earth's material
@@ -69,7 +69,7 @@
 
         // create moon's material
         var sphereGeometry = new THREE.SphereGeometry(moonRadius, moonSegments, moonRings);
-        var sphereMaterial = new THREE.MeshLambertMaterial({ color: "rosybrown" });
+        var sphereMaterial = new THREE.MeshLambertMaterial({ color: "brown" });
         moon = new THREE.Mesh(sphereGeometry, sphereMaterial);
 
         // add sun to scene
