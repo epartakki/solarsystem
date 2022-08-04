@@ -21,7 +21,7 @@
         // The renderer has already been created before this function is called.
         function createWorld() {
 
-            renderer.setClearColor(0); // Set background color (0, or 0x000000, is black).
+        renderer.setClearColor(0); // Set background color (0, or 0x000000, is black).
         scene = new THREE.Scene(); // Create a new scene which we can add objects to.
         // create a camera, sitting on the positive z-axis.  The camera is not part of the scene.
         camera = new THREE.PerspectiveCamera(45, canvas.width/canvas.height, 0.1, 300);
@@ -69,7 +69,7 @@
 
         // create moon's material
         var sphereGeometry = new THREE.SphereGeometry(moonRadius, moonSegments, moonRings);
-        var sphereMaterial = new THREE.MeshLambertMaterial({ color: "brown" });
+        var sphereMaterial = new THREE.MeshLambertMaterial({ color: "gold" });
         moon = new THREE.Mesh(sphereGeometry, sphereMaterial);
 
         // add sun to scene
